@@ -70,7 +70,7 @@
 }
 - (void)change_enabled:(NSString *)newValue
 {
-    if ([newValue isEqualToString:@"false"]) {
+    if ([newValue isEqualToString:@"0"]) {
         self.userInteractionEnabled = NO;
     }
     else
