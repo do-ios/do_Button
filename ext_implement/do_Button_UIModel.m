@@ -19,7 +19,7 @@
     [self RegistProperty:[[doProperty alloc]init:@"bgImage" :String :@"" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"enabled" :Bool :@"true" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"fontColor" :String :@"000000FF" :NO]];
-    [self RegistProperty:[[doProperty alloc]init:@"fontSize" :Number :@"17" :NO]];
+    [self RegistProperty:[[doProperty alloc]init:@"fontSize" :Number :@"9" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"fontStyle" :String :@"normal" :NO]];
     [self RegistProperty:[[doProperty alloc]init:@"radius" :Number :@"0" :YES]];
     [self RegistProperty:[[doProperty alloc]init:@"text" :String :@"" :NO]];

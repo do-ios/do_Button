@@ -83,10 +83,7 @@
     [self setTitleColor:[doUIModuleHelper GetColorFromString:newValue :[UIColor blackColor]] forState:UIControlStateNormal];
 }
 - (void)change_fontSize:(NSString *)newValue{
-    UIFont * font = self.titleLabel.font;
-    if (font == nil) {
-        font = [UIFont systemFontOfSize:[[model GetProperty:@"fontSize"].DefaultValue intValue]];
-    }
+    UIFont *font = [UIFont systemFontOfSize:[newValue intValue]];
     int _intFontSize = [doUIModuleHelper GetDeviceFontSize:[[doTextHelper Instance] StrToInt:newValue :[[model GetProperty:@"fontSize"].DefaultValue intValue]] :model.XZoom :model.YZoom];
     self.titleLabel.font = [font fontWithSize:_intFontSize];//z012
 }
