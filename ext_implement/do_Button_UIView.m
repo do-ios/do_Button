@@ -72,14 +72,8 @@
 {
     if (!newValue || [newValue isEqualToString:@""]) {
         self.userInteractionEnabled = YES;
-    }
-    if ([newValue isEqualToString:@"false"]) {
-        self.userInteractionEnabled = NO;
-    }
-    else
-    {
-        self.userInteractionEnabled = YES;
-    }
+    }else
+        self.userInteractionEnabled = [newValue boolValue];
 }
 
 - (void)change_fontColor:(NSString *)newValue{
