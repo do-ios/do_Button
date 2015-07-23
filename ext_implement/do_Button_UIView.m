@@ -20,10 +20,15 @@
 #import "doDefines.h"
 #import "doIOHelper.h"
 
+#define FONT_OBLIQUITY 15.0
+
 @implementation do_Button_UIView
 {
     NSString *_myFontStyle;
     NSString *_oldFontStyle;
+    
+    int _intFontSize;
+    NSString *_myFontFlag;
 }
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
@@ -43,6 +48,7 @@
 - (void) OnDispose
 {
     _myFontStyle = nil;
+    _myFontFlag = nil;
     //自定义的全局属性
 }
 //实现布局
@@ -67,6 +73,8 @@
     [self setTitle:newValue forState:UIControlStateNormal];
     if(_myFontStyle)
         [self change_fontStyle:_myFontStyle];
+    if (_myFontFlag)
+        [self change_textFlag:_myFontFlag];
 }
 - (void)change_enabled:(NSString *)newValue
 {
@@ -81,45 +89,64 @@
 }
 - (void)change_fontSize:(NSString *)newValue{
     UIFont *font = [UIFont systemFontOfSize:[newValue intValue]];
-    int _intFontSize = [doUIModuleHelper GetDeviceFontSize:[[doTextHelper Instance] StrToInt:newValue :[[model GetProperty:@"fontSize"].DefaultValue intValue]] :model.XZoom :model.YZoom];
+    _intFontSize = [doUIModuleHelper GetDeviceFontSize:[[doTextHelper Instance] StrToInt:newValue :[[model GetProperty:@"fontSize"].DefaultValue intValue]] :model.XZoom :model.YZoom];
     self.titleLabel.font = [font fontWithSize:_intFontSize];//z012
+    
+    if(_myFontStyle)
+        [self change_fontStyle:_myFontStyle];
+    if (_myFontFlag)
+        [self change_textFlag:_myFontFlag];
 }
-- (void)change_fontStyle:(NSString *)newValue{
+
+- (void)change_fontStyle:(NSString *)newValue
+{
+    //自己的代码实现
     _myFontStyle = [NSString stringWithFormat:@"%@",newValue];
     if (self.titleLabel.text==nil || [self.titleLabel.text isEqualToString:@""]) return;
-    NSRange range = {0,[self.titleLabel.text length]};
-    NSMutableAttributedString *str = [self.titleLabel.attributedText mutableCopy];
-    [str removeAttribute:NSUnderlineStyleAttributeName range:range];
-    self.titleLabel.attributedText = str;
     
-    float fontSize = self.titleLabel.font.pointSize;//The receiver’s point size, or the effective vertical point size for a font with a nonstandard matrix. (read-only)
-    
-    if([newValue isEqualToString:@"normal"]){
-        self.titleLabel.font = [UIFont systemFontOfSize:fontSize];
-    }else if([newValue isEqualToString:@"bold"]){
-        if([_oldFontStyle isEqualToString:@"italic"])
-            [self.titleLabel setFont:[UIFont fontWithName:@"Helvetica-BoldOblique" size:fontSize]];
-        else
-            self.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
-    }else if([newValue isEqualToString:@"italic"]){
-        if([_oldFontStyle isEqualToString:@"bold"])
-            [self.titleLabel setFont:[UIFont fontWithName:@"Helvetica-BoldOblique" size:fontSize]];
-        else
-            self.titleLabel.font = [UIFont italicSystemFontOfSize:fontSize];
-    }else if([newValue isEqualToString:@"underline"]){
-        NSMutableAttributedString * content = [self.titleLabel.attributedText mutableCopy];
-        NSRange contentRange = {0,[content length]};
-        [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
-        self.titleLabel.attributedText = content;
-        [content endEditing];
+    float fontSize = self.titleLabel.font.pointSize;
+    if([newValue isEqualToString:@"normal"])
+        [self.titleLabel setFont:[UIFont systemFontOfSize:fontSize]];
+    else if([newValue isEqualToString:@"bold"])
+        [self.titleLabel setFont:[UIFont boldSystemFontOfSize:fontSize]];
+    else if([newValue isEqualToString:@"italic"])
+    {
+        CGAffineTransform matrix =  CGAffineTransformMake(1, 0, tanf(FONT_OBLIQUITY * (CGFloat)M_PI / 180), 1, 0, 0);
+        UIFontDescriptor *desc = [ UIFontDescriptor fontDescriptorWithName :[ UIFont systemFontOfSize :fontSize ]. fontName matrix :matrix];
+        [self.titleLabel setFont:[ UIFont fontWithDescriptor :desc size :fontSize]];
     }
+    else if([newValue isEqualToString:@"bold_italic"]){}
     else
     {
         NSString *mesg = [NSString stringWithFormat:@"不支持字体:%@",newValue];
         [NSException raise:@"do_Button" format:mesg,@""];
     }
-    _oldFontStyle = newValue;
 }
+
+- (void)change_textFlag:(NSString *)newValue
+{
+    //自己的代码实现
+    _myFontFlag = [NSString stringWithFormat:@"%@",newValue];
+    if (!IOS_8 && _intFontSize < 14) {
+        return;
+    }
+    if (self.titleLabel.text==nil || [self.titleLabel.text isEqualToString:@""]) return;
+    
+    NSMutableAttributedString *content = [self.titleLabel.attributedText mutableCopy];
+    [content beginEditing];
+    NSRange contentRange = {0,[content length]};
+    if ([newValue isEqualToString:@"normal" ]) {
+        [content removeAttribute:NSUnderlineStyleAttributeName range:contentRange];
+        [content removeAttribute:NSStrikethroughStyleAttributeName range:contentRange];
+    }else if ([newValue isEqualToString:@"underline" ]) {
+        [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+    }else if ([newValue isEqualToString:@"strikethrough" ]) {
+        [content addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+    }
+    self.titleLabel.attributedText = content;
+    [content endEditing];
+}
+
 - (void)change_radius:(NSString *)newValue{
     
     self.layer.cornerRadius = [[doTextHelper Instance] StrToInt:newValue :0] * model.CurrentUIContainer.InnerXZoom;
