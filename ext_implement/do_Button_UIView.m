@@ -25,7 +25,6 @@
 @implementation do_Button_UIView
 {
     NSString *_myFontStyle;
-    NSString *_oldFontStyle;
     
     int _intFontSize;
     NSString *_myFontFlag;
@@ -42,6 +41,12 @@
     [self addTarget:self action:@selector(fingerUp:) forControlEvents:UIControlEventTouchUpOutside];
     
     [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
+    [self change_enabled:[model GetProperty:@"enabled"].DefaultValue];
+    [self change_fontColor:[model GetProperty:@"fontColor"].DefaultValue];
+    [self change_fontStyle:[model GetProperty:@"fontStyle"].DefaultValue];
+    [self change_textFlag:[model GetProperty:@"textFlag"].DefaultValue];
+    [self change_radius:[model GetProperty:@"radius"].DefaultValue];
     [self change_fontSize:[model GetProperty:@"fontSize"].DefaultValue];
 }
 //销毁所有的全局对象
@@ -116,11 +121,6 @@
         [self.titleLabel setFont:[ UIFont fontWithDescriptor :desc size :fontSize]];
     }
     else if([newValue isEqualToString:@"bold_italic"]){}
-    else
-    {
-        NSString *mesg = [NSString stringWithFormat:@"不支持字体:%@",newValue];
-        [NSException raise:@"do_Button" format:mesg,@""];
-    }
 }
 
 - (void)change_textFlag:(NSString *)newValue
