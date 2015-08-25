@@ -127,9 +127,6 @@
 {
     //自己的代码实现
     _myFontFlag = [NSString stringWithFormat:@"%@",newValue];
-    if (!IOS_8 && _intFontSize < 14) {
-        return;
-    }
     if (self.titleLabel.text==nil || [self.titleLabel.text isEqualToString:@""]) return;
     
     NSMutableAttributedString *content = [self.titleLabel.attributedText mutableCopy];
@@ -144,6 +141,7 @@
         [content addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
     }
     self.titleLabel.attributedText = content;
+    [self setAttributedTitle:content forState:UIControlStateNormal];
     [content endEditing];
 }
 
