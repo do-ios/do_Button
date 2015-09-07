@@ -28,6 +28,7 @@
     
     int _intFontSize;
     NSString *_myFontFlag;
+    NSString *_tmpFontColor;
 }
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
@@ -75,11 +76,20 @@
  NSString *属性名 = [(doUIModule *)_model GetProperty:@"属性名"].DefaultValue;
  */
 - (void)change_text:(NSString *)newValue{
-    [self setTitle:newValue forState:UIControlStateNormal];
+    NSRange range = NSMakeRange(0, self.currentAttributedTitle.length);
+    if (self.currentAttributedTitle.length==0) {
+        [self setAttributedTitle:[[NSAttributedString alloc]initWithString:newValue] forState:UIControlStateNormal];
+    }
+    else
+    {
+        NSDictionary *arrDict = [self.currentAttributedTitle attributesAtIndex:0 effectiveRange:&range];
+        [self setAttributedTitle:[[NSAttributedString alloc]initWithString:newValue attributes:arrDict] forState:UIControlStateNormal];
+    }
     if(_myFontStyle)
         [self change_fontStyle:_myFontStyle];
     if (_myFontFlag)
         [self change_textFlag:_myFontFlag];
+    [self change_fontColor:_tmpFontColor];
 }
 - (void)change_enabled:(NSString *)newValue
 {
@@ -90,13 +100,19 @@
 }
 
 - (void)change_fontColor:(NSString *)newValue{
-    [self setTitleColor:[doUIModuleHelper GetColorFromString:newValue :[UIColor blackColor]] forState:UIControlStateNormal];
+    UIColor* fontColor = [doUIModuleHelper GetColorFromString:newValue :[UIColor blackColor]] ;
+    _tmpFontColor = newValue;
+    NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc]initWithAttributedString:self.currentAttributedTitle];
+    [attriString addAttribute:NSForegroundColorAttributeName
+                        value:fontColor
+                        range:NSMakeRange(0, self.currentAttributedTitle.length)];
+    
+    [self setAttributedTitle:attriString forState:UIControlStateNormal];
 }
 - (void)change_fontSize:(NSString *)newValue{
     UIFont *font = [UIFont systemFontOfSize:[newValue intValue]];
     _intFontSize = [doUIModuleHelper GetDeviceFontSize:[[doTextHelper Instance] StrToInt:newValue :[[model GetProperty:@"fontSize"].DefaultValue intValue]] :model.XZoom :model.YZoom];
-    self.titleLabel.font = [font fontWithSize:_intFontSize];//z012
-    
+    self.titleLabel.font = [font fontWithSize:_intFontSize];
     if(_myFontStyle)
         [self change_fontStyle:_myFontStyle];
     if (_myFontFlag)
@@ -113,7 +129,9 @@
     if([newValue isEqualToString:@"normal"])
         [self.titleLabel setFont:[UIFont systemFontOfSize:fontSize]];
     else if([newValue isEqualToString:@"bold"])
+    {
         [self.titleLabel setFont:[UIFont boldSystemFontOfSize:fontSize]];
+    }
     else if([newValue isEqualToString:@"italic"])
     {
         CGAffineTransform matrix =  CGAffineTransformMake(1, 0, tanf(FONT_OBLIQUITY * (CGFloat)M_PI / 180), 1, 0, 0);
@@ -129,7 +147,7 @@
     _myFontFlag = [NSString stringWithFormat:@"%@",newValue];
     if (self.titleLabel.text==nil || [self.titleLabel.text isEqualToString:@""]) return;
     
-    NSMutableAttributedString *content = [self.titleLabel.attributedText mutableCopy];
+    NSMutableAttributedString *content = [self.currentAttributedTitle mutableCopy];
     [content beginEditing];
     NSRange contentRange = {0,[content length]};
     if ([newValue isEqualToString:@"normal" ]) {
@@ -140,8 +158,7 @@
     }else if ([newValue isEqualToString:@"strikethrough" ]) {
         [content addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
     }
-    self.titleLabel.attributedText = content;
-    [self setAttributedTitle:content forState:UIControlStateNormal];
+   [self setAttributedTitle:content forState:UIControlStateNormal];
     [content endEditing];
 }
 
