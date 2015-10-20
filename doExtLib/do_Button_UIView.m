@@ -75,6 +75,15 @@
  获取属性最初的默认值
  NSString *属性名 = [(doUIModule *)_model GetProperty:@"属性名"].DefaultValue;
  */
+
+//修改listview 的cell被选中的时候，背景色自动变为白色问题
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    UIColor *bgColor = [doUIModuleHelper GetColorFromString:[_model GetPropertyValue:@"bgColor"] : [UIColor clearColor]];
+    if (CGColorEqualToColor(bgColor.CGColor,backgroundColor.CGColor)) {
+        [super setBackgroundColor:bgColor];
+    }
+}
 - (void)change_text:(NSString *)newValue{
     NSRange range = NSMakeRange(0, self.currentAttributedTitle.length);
     if (self.currentAttributedTitle.length==0) {
