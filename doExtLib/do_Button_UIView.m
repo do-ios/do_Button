@@ -122,6 +122,7 @@
     UIFont *font = [UIFont systemFontOfSize:[newValue intValue]];
     _intFontSize = [doUIModuleHelper GetDeviceFontSize:[[doTextHelper Instance] StrToInt:newValue :[[_model GetProperty:@"fontSize"].DefaultValue intValue]] :_model.XZoom :_model.YZoom];
     self.titleLabel.font = [font fontWithSize:_intFontSize];
+    self.titleLabel.numberOfLines = 0;
     if(_myFontStyle)
         [self change_fontStyle:_myFontStyle];
     if (_myFontFlag)
@@ -148,6 +149,7 @@
         [self.titleLabel setFont:[ UIFont fontWithDescriptor :desc size :fontSize]];
     }
     else if([newValue isEqualToString:@"bold_italic"]){}
+    self.titleLabel.numberOfLines = 0;
 }
 
 - (void)change_textFlag:(NSString *)newValue
@@ -169,6 +171,7 @@
     }
     [self setAttributedTitle:content forState:UIControlStateNormal];
     [content endEditing];
+    self.titleLabel.numberOfLines = 0;
 }
 
 - (void)change_radius:(NSString *)newValue{
