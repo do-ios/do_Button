@@ -175,10 +175,9 @@
 }
 
 - (void)change_radius:(NSString *)newValue{
-    
-    self.layer.cornerRadius = [[doTextHelper Instance] StrToInt:newValue :0] * _model.CurrentUIContainer.InnerXZoom;
+    CGFloat minZoom = MIN(_model.XZoom, _model.YZoom);
     self.layer.masksToBounds = YES;
-    
+    self.layer.cornerRadius = [[doTextHelper Instance] StrToInt:newValue :0]*minZoom;
 }
 - (void)change_bgImage:(NSString *)newValue{
     

@@ -622,6 +622,7 @@
 					"$(PROJECT_DIR)/Do_Test/doCore",
 					"$(PROJECT_DIR)/Do_Test/do_Example",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "857c213d-2476-4b6d-b18a-27bd89d372c8";
@@ -640,6 +641,7 @@
 					"$(PROJECT_DIR)/Do_Test/doCore",
 					"$(PROJECT_DIR)/Do_Test/do_Example",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "857c213d-2476-4b6d-b18a-27bd89d372c8";
