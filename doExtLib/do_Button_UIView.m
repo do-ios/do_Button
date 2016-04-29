@@ -19,8 +19,13 @@
 #import "doIPage.h"
 #import "doDefines.h"
 #import "doIOHelper.h"
+#import "doIBorder.h"
 
 #define FONT_OBLIQUITY 15.0
+
+@interface do_Button_UIView()<doIBorder>
+
+@end
 
 @implementation do_Button_UIView
 {
@@ -175,6 +180,8 @@
 }
 
 - (void)change_radius:(NSString *)newValue{
+    [doUIModuleHelper generateBorder:_model :@""];
+
     CGFloat minZoom = MIN(_model.XZoom, _model.YZoom);
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = [[doTextHelper Instance] StrToInt:newValue :0]*minZoom;
@@ -184,6 +191,9 @@
     NSString * imgPath = [doIOHelper GetLocalFileFullPath:_model.CurrentPage.CurrentApp :newValue];
     UIImage * img = [UIImage imageWithContentsOfFile:imgPath];
     [self setBackgroundImage:img forState:UIControlStateNormal];
+    
+    [doUIModuleHelper generateBorder:_model :[_model GetPropertyValue:@"border"]];
+
 }
 
 #pragma mark - event
@@ -238,5 +248,52 @@
         if(view == self)
             view = nil;
     return view;
+}
+
+#pragma mark - border
+- (BOOL)isSupportDiffBorder
+{
+    return YES;
+}
+- (void)clearBorder
+{
+    self.backgroundColor = [doUIModuleHelper GetColorFromString:[_model GetPropertyValue:@"bgColor"] : [UIColor clearColor]];
+    if ([_model GetPropertyValue:@"bgImage"].length>0) {
+        [self change_bgImage:[_model GetPropertyValue:@"bgImage"]];
+    }
+}
+- (void)generateBorderWithPath:(UIBezierPath *)path :(CAShapeLayer *)shape;
+{
+    if (shape) {
+        [shape removeFromSuperlayer];
+        shape.fillColor = [UIColor clearColor].CGColor;
+    }
+    
+    UIImageView *i = [UIImageView new];
+    i.frame = self.bounds;
+    UIImage *image = [self backgroundImageForState:UIControlStateNormal];
+    i.image =  image;
+    UIColor *bgColor = [doUIModuleHelper GetColorFromString:[_model GetPropertyValue:@"bgColor"] : [UIColor clearColor]];
+    i.backgroundColor = bgColor;
+    
+    CGRect rect = self.bounds;
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef currentContext = UIGraphicsGetCurrentContext();
+    if(!currentContext){
+        UIGraphicsEndImageContext();
+        return;
+    }
+    CGContextAddPath(currentContext,path.CGPath);
+    CGContextClip(currentContext);
+    
+    [i.layer renderInContext:currentContext];
+    CGContextDrawPath(currentContext, kCGPathFillStroke);
+    UIImage *output = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    self.backgroundColor = [UIColor clearColor];
+    [self.layer insertSublayer:shape atIndex:0];
+    [self setBackgroundImage:output forState:UIControlStateNormal];
 }
 @end
