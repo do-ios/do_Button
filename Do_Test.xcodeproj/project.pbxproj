@@ -72,6 +72,8 @@
 		3BF19BA41B9D602F001B1D9A /* do_Button_UIModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = do_Button_UIModel.m; sourceTree = "<group>"; };
 		3BF19BA51B9D602F001B1D9A /* do_Button_UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = do_Button_UIView.h; sourceTree = "<group>"; };
 		3BF19BA61B9D602F001B1D9A /* do_Button_UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = do_Button_UIView.m; sourceTree = "<group>"; };
+		77C2E3DE1CD302D900BEF06B /* doIBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = doIBorder.h; path = Header/doIBorder.h; sourceTree = "<group>"; };
+		77C2E3DF1CD3032900BEF06B /* doUIModuleHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = doUIModuleHelper.h; path = Header/doUIModuleHelper.h; sourceTree = "<group>"; };
 		A44BC66A1AEE005E001580AA /* Do_Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Do_Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A44BC66E1AEE005E001580AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A44BC66F1AEE005E001580AA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -295,6 +297,8 @@
 		A44BC6B41AEE00A2001580AA /* doCore */ = {
 			isa = PBXGroup;
 			children = (
+				77C2E3DF1CD3032900BEF06B /* doUIModuleHelper.h */,
+				77C2E3DE1CD302D900BEF06B /* doIBorder.h */,
 				CC1195AB1B147F7C00583148 /* doAssetLaunchImage.h */,
 				CC1195AC1B147F7C00583148 /* doCallBackTask.h */,
 				CC1195AD1B147F7C00583148 /* doDefines.h */,

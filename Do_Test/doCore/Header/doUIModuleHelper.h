@@ -27,8 +27,13 @@
 +(CATransition*)GetAnmation:(NSString*)anmationType :(float)time
 ;
 +(void)Alert:(NSString*)title msg:(NSString*)msg;
++ (void)ToastMsg:(NSString *)msg;
 +(UIImage*)imageWithImageSimple:(UIImage*)image scaledToSize:(CGSize)newSize;
 + (CGSize)sizeWithImageData:(UIImage *)image;
 + (NSString *)stringWithUUID;
 +(int)GetDeviceFontSize:(int) _fontSize : (float) xzoom : (float) yzoom;
+
++ (NSString *) GetPlatformString;
++ (void) generateBorder:(doUIModule *)_uiModule :(NSString *)border;
+
 @end
