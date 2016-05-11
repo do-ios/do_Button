@@ -34,6 +34,8 @@
     int _intFontSize;
     NSString *_myFontFlag;
     NSString *_tmpFontColor;
+    
+    BOOL _isClearBorder;
 }
 #pragma mark - doIUIModuleView协议方法（必须）
 //引用Model对象
@@ -54,6 +56,7 @@
     [self change_textFlag:[_model GetProperty:@"textFlag"].DefaultValue];
     [self change_radius:[_model GetProperty:@"radius"].DefaultValue];
     [self change_fontSize:[_model GetProperty:@"fontSize"].DefaultValue];
+    _isClearBorder = NO;
 }
 //销毁所有的全局对象
 - (void) OnDispose
@@ -192,8 +195,9 @@
     UIImage * img = [UIImage imageWithContentsOfFile:imgPath];
     [self setBackgroundImage:img forState:UIControlStateNormal];
     
-    [doUIModuleHelper generateBorder:_model :[_model GetPropertyValue:@"border"]];
-
+    if (!_isClearBorder) {
+        [doUIModuleHelper generateBorder:_model :[_model GetPropertyValue:@"border"]];
+    }
 }
 
 #pragma mark - event
@@ -259,11 +263,13 @@
 {
     self.backgroundColor = [doUIModuleHelper GetColorFromString:[_model GetPropertyValue:@"bgColor"] : [UIColor clearColor]];
     if ([_model GetPropertyValue:@"bgImage"].length>0) {
+        _isClearBorder = YES;
         [self change_bgImage:[_model GetPropertyValue:@"bgImage"]];
     }
 }
 - (void)generateBorderWithPath:(UIBezierPath *)path :(CAShapeLayer *)shape;
 {
+    _isClearBorder = NO;
     if (shape) {
         [shape removeFromSuperlayer];
         shape.fillColor = [UIColor clearColor].CGColor;
