@@ -272,15 +272,9 @@
     _isClearBorder = NO;
     if (shape) {
         [shape removeFromSuperlayer];
-        shape.fillColor = [UIColor clearColor].CGColor;
+//        shape.fillColor = [UIColor clearColor].CGColor;
     }
-    
-    UIImageView *i = [UIImageView new];
-    i.frame = self.bounds;
     UIImage *image = [self backgroundImageForState:UIControlStateNormal];
-    i.image =  image;
-    UIColor *bgColor = [doUIModuleHelper GetColorFromString:[_model GetPropertyValue:@"bgColor"] : [UIColor clearColor]];
-    i.backgroundColor = bgColor;
     
     CGRect rect = self.bounds;
     UIGraphicsBeginImageContext(rect.size);
@@ -292,13 +286,13 @@
     CGContextAddPath(currentContext,path.CGPath);
     CGContextClip(currentContext);
     
-    [i.layer renderInContext:currentContext];
+    [image drawInRect:rect];
     CGContextDrawPath(currentContext, kCGPathFillStroke);
     UIImage *output = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
     
-    self.backgroundColor = [UIColor clearColor];
+//    self.backgroundColor = [UIColor clearColor];
     [self.layer insertSublayer:shape atIndex:0];
     [self setBackgroundImage:output forState:UIControlStateNormal];
 }
